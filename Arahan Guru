@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arahan Guru - Ujian Semester Ganjil</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #172333;
+  color: white;
+  text-align: center;
+}
+
+h2 {
+  padding: 15px;
+  margin: 0;
+  background: #123d32;
+}
+
+.kelas {
+  position: relative;
+  width: 100%;
+  max-width: 750px;
+  height: 480px;
+  margin: 20px auto;
+  overflow: hidden;
+  background: linear-gradient(#d8e8ef, #b4c9d1);
+  border: 8px solid #60452f;
+  border-radius: 12px;
+}
+
+.papan {
+  position: absolute;
+  top: 20px;
+  left: 5%;
+  width: 90%;
+  height: 170px;
+  background: #176044;
+  border: 8px solid #805a36;
+  color: white;
+  padding: 20px;
+  font-size: 22px;
+}
+
+.guru {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 310px;
+  width: auto;
+  max-width: 85%;
+  object-fit: contain;
+  animation: bergerak 2s infinite alternate;
+  transform-origin: bottom center;
+}
+
+@keyframes bergerak {
+  from {
+    translate: -2px 0;
+  }
+  to {
+    translate: 2px -5px;
+  }
+}
+
+.subtitle {
+  max-width: 750px;
+  min-height: 75px;
+  margin: 10px auto;
+  padding: 15px;
+  background: #000b;
+  border-radius: 10px;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+button {
+  padding: 14px 28px;
+  margin: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #16a36b;
+  color: white;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #08794b;
+}
+
+#waktu {
+  font-size: 18px;
+  color: #ffdc70;
+}
+</style>
+</head>
+
+<body>
+
+<h2>ARAHAN GURU</h2>
+
+<div class="kelas">
+
+  <div class="papan">
+    <b>UJIAN SEMESTER GANJIL</b>
+    <p>Belajar Tekun, Raih Nilai Terbaik!</p>
+  </div>
+
+  <img src="FOTOKU.jpg"
+       class="guru"
+       alt="Foto bapak guru">
+
+</div>
+
+<div id="subtitle" class="subtitle">
+  Selamat datang anak-anak.
+  Klik tombol mulai untuk mendengarkan arahan bapak guru.
+</div>
+
+<div id="waktu">Durasi: 10 detik</div>
+
+<button onclick="mulaiVideo()">▶ MULAI ARAHAN</button>
+<button onclick="ulang()">↻ ULANGI</button>
+
+<script>
+let timer;
+let utterance;
+
+const dialog =
+"Anak-anak, ujian semester ganjil segera tiba. " +
+"Rajinlah belajar, ulangi pelajaran, berdoa, " +
+"dan tetap percaya diri agar kalian meraih nilai terbaik.";
+
+function mulaiVideo() {
+  clearTimeout(timer);
+  speechSynthesis.cancel();
+
+  let subtitle = document.getElementById("subtitle");
+  let waktu = document.getElementById("waktu");
+
+  subtitle.innerText = dialog;
+
+  utterance = new SpeechSynthesisUtterance(dialog);
+  utterance.lang = "id-ID";
+  utterance.rate = 1.15;
+  utterance.pitch = 1;
+  utterance.volume = 1;
+
+  speechSynthesis.speak(utterance);
+
+  let detik = 10;
+  waktu.innerText = "Durasi: " + detik + " detik";
+
+  let mulai = Date.now();
+
+  timer = setInterval(() => {
+    let sisa = Math.max(
+      0,
+      10 - Math.floor((Date.now() - mulai) / 1000)
+    );
+
+    waktu.innerText = "Durasi: " + sisa + " detik";
+
+    if (sisa <= 0) {
+      clearInterval(timer);
+      speechSynthesis.cancel();
+      subtitle.innerText =
+        "Terima kasih. Selamat belajar dan semoga sukses!";
+    }
+  }, 200);
+}
+
+function ulang() {
+  clearInterval(timer);
+  speechSynthesis.cancel();
+  mulaiVideo();
+}
+</script>
+
+</body>
+</html>
